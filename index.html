@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Black Charger</title>
+    <title>Black Charger - Web Proxy</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,7 +32,7 @@
         iframe {
             width: 100%;
             height: 600px;
-            border: none;
+            border: 1px solid #e74c3c;
             margin-top: 20px;
         }
     </style>
@@ -40,20 +40,24 @@
 <body>
 
     <h1>Black Charger - Web Proxy</h1>
-    <input type="text" id="urlInput" placeholder="Enter URL to visit">
+    <input type="text" id="urlInput" placeholder="Enter URL to visit (http:// or https://)">
     <button id="loadButton">Load URL</button>
-    <iframe id="proxyFrame"></iframe>
+    <iframe id="proxyFrame" sandbox="allow-same-origin allow-scripts"></iframe>
 
     <script>
         document.getElementById('loadButton').onclick = function() {
-            const url = document.getElementById('urlInput').value;
+            const urlInput = document.getElementById('urlInput');
             const proxyFrame = document.getElementById('proxyFrame');
-            // Validate input URL (basic validation)
-            if (url) {
-                proxyFrame.src = 'http://your-backend-url/proxy?url=' + encodeURIComponent(url);
-            } else {
-                alert('Please enter a valid URL.');
+            const url = urlInput.value.trim();
+
+            // Basic URL validation
+            if (url === "" || (!url.startsWith('http://') && !url.startsWith('https://'))) {
+                alert('Please enter a valid URL starting with http:// or https://');
+                return;
             }
+
+            // Load the URL through the backend
+            proxyFrame.src = 'http://127.0.0.1:5000/proxy?url=' + encodeURIComponent(url);
         };
     </script>
 
